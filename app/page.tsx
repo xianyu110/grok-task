@@ -1,18 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Play, Pause, Trash2, Clock, CheckCircle, XCircle, History, X } from 'lucide-react';
-
-interface Task {
-  id: string;
-  name: string;
-  description?: string;
-  prompt: string;
-  schedule: string;
-  status: 'active' | 'paused' | 'completed';
-  createdAt: string;
-  updatedAt: string;
-}
+import { Plus, Play, Pause, Trash2, Clock, CheckCircle, XCircle, History, X, Settings } from 'lucide-react';
+import { getTasks, createTask, updateTask, deleteTask, getTaskExecutions, addExecution, getApiConfig, saveApiConfig, type Task, type ApiConfig } from '@/lib/clientStorage';
+import { executeTask } from '@/lib/clientGrokClient';
+import { templates } from '@/lib/templates';
 
 interface Template {
   id: string;
@@ -25,130 +17,92 @@ interface Template {
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [templates, setTemplates] = useState<Template[]>([]);
   const [showTemplates, setShowTemplates] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [executingTask, setExecutingTask] = useState<string | null>(null);
+  const [apiConfig, setApiConfig] = useState<ApiConfig>({ apiKey: '', apiBase: '', model: '' });
 
   useEffect(() => {
-    fetchTasks();
-    fetchTemplates();
+    // 加载任务和配置
+    setTasks(getTasks());
+    setApiConfig(getApiConfig());
   }, []);
 
-  const fetchTasks = async () => {
-    try {
-      const res = await fetch('/api/tasks');
-      const data = await res.json();
-      if (data.success) {
-        setTasks(data.data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch tasks:', error);
-    }
-  };
-
-  const fetchTemplates = async () => {
-    try {
-      const res = await fetch('/api/templates');
-      const data = await res.json();
-      if (data.success) {
-        setTemplates(data.data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch templates:', error);
-    }
-  };
-
-  const createTaskFromTemplate = async (template: Template) => {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: template.name,
-          description: template.description,
-          prompt: template.prompt,
-          schedule: template.defaultSchedule,
-          templateId: template.id,
-          status: 'active',
-        }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        await fetchTasks();
-        setShowTemplates(false);
-        alert('任务创建成功！');
-      }
-    } catch (error) {
-      console.error('Failed to create task:', error);
-      alert('创建任务失败');
-    } finally {
-      setLoading(false);
-    }
+  const handleCreateTaskFromTemplate = (template: Template) => {
+    const newTask = createTask({
+      name: template.name,
+      description: template.description,
+      prompt: template.prompt,
+      schedule: template.defaultSchedule,
+      status: 'active',
+      templateId: template.id,
+    });
+    setTasks(getTasks());
+    setShowTemplates(false);
+    alert('任务创建成功！');
   };
 
   const [executionResult, setExecutionResult] = useState<any>(null);
   const [showExecutionModal, setShowExecutionModal] = useState(false);
 
-  const executeTask = async (taskId: string) => {
+  const handleExecuteTask = async (taskId: string) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    // 检查 API 配置
+    if (!apiConfig.apiKey || !apiConfig.apiBase) {
+      alert('请先配置 API 设置！点击右上角设置按钮进行配置。');
+      setShowSettings(true);
+      return;
+    }
+
     setExecutingTask(taskId);
     try {
-      const res = await fetch(`/api/tasks/${taskId}/execute`, {
-        method: 'POST',
+      const result = await executeTask(task.prompt, apiConfig);
+
+      // 保存执行历史
+      addExecution({
+        taskId,
+        status: result.success ? 'success' : 'failed',
+        result: result.content,
+        error: result.error,
+        executedAt: new Date().toISOString(),
       });
-      const data = await res.json();
-      if (data.success) {
-        setExecutionResult({
-          taskId,
-          result: data.data.executionResult,
-          timestamp: new Date().toISOString(),
-        });
-        setShowExecutionModal(true);
-      } else {
-        alert('任务执行失败：' + data.error);
-      }
-    } catch (error) {
-      console.error('Failed to execute task:', error);
-      alert('执行任务失败');
+
+      setExecutionResult({
+        taskId,
+        result,
+        timestamp: new Date().toISOString(),
+      });
+      setShowExecutionModal(true);
+    } catch (error: any) {
+      alert('执行任务失败: ' + error.message);
     } finally {
       setExecutingTask(null);
     }
   };
 
-  const deleteTask = async (taskId: string) => {
+  const handleDeleteTask = (taskId: string) => {
     if (!confirm('确定要删除这个任务吗？')) return;
-
-    try {
-      const res = await fetch(`/api/tasks/${taskId}`, {
-        method: 'DELETE',
-      });
-      const data = await res.json();
-      if (data.success) {
-        await fetchTasks();
-        alert('任务已删除');
-      }
-    } catch (error) {
-      console.error('Failed to delete task:', error);
-      alert('删除任务失败');
-    }
+    deleteTask(taskId);
+    setTasks(getTasks());
+    alert('任务已删除');
   };
 
-  const toggleTaskStatus = async (task: Task) => {
+  const handleToggleTaskStatus = (task: Task) => {
     const newStatus = task.status === 'active' ? 'paused' : 'active';
-    try {
-      const res = await fetch(`/api/tasks/${task.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...task, status: newStatus }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        await fetchTasks();
-      }
-    } catch (error) {
-      console.error('Failed to update task:', error);
+    updateTask(task.id, { status: newStatus });
+    setTasks(getTasks());
+  };
+
+  const handleSaveApiConfig = () => {
+    if (!apiConfig.apiKey || !apiConfig.apiBase) {
+      alert('请填写 API 密钥和地址！');
+      return;
     }
+    saveApiConfig(apiConfig);
+    setShowSettings(false);
+    alert('API 配置已保存！');
   };
 
   const getStatusIcon = (status: string) => {
@@ -175,17 +129,10 @@ export default function Home() {
   const [selectedTaskHistory, setSelectedTaskHistory] = useState<string | null>(null);
   const [taskExecutions, setTaskExecutions] = useState<any[]>([]);
 
-  const viewHistory = async (taskId: string) => {
-    try {
-      const res = await fetch(`/api/tasks/${taskId}/executions`);
-      const data = await res.json();
-      if (data.success) {
-        setTaskExecutions(data.data);
-        setSelectedTaskHistory(taskId);
-      }
-    } catch (error) {
-      console.error('Failed to fetch history:', error);
-    }
+  const viewHistory = (taskId: string) => {
+    const executions = getTaskExecutions(taskId);
+    setTaskExecutions(executions);
+    setSelectedTaskHistory(taskId);
   };
 
   return (
@@ -193,15 +140,24 @@ export default function Home() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            Grok Tasks Manager
-          </h1>
-          <p className="text-gray-400 mb-3">管理你的 Grok 自动化任务</p>
+          <div className="flex items-center justify-between mb-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Grok Tasks Manager
+            </h1>
+            <button
+              onClick={() => setShowSettings(true)}
+              className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg transition-colors"
+            >
+              <Settings className="w-5 h-5" />
+              API 设置
+            </button>
+          </div>
+          <p className="text-gray-400 mb-3">管理你的 Grok 自动化任务 - 纯前端版本</p>
           <div className="bg-blue-900 bg-opacity-30 border border-blue-500 rounded-lg p-4 max-w-4xl">
             <p className="text-blue-300 text-sm">
-              <span className="font-semibold">💡 使用中转 API：</span>
-              本项目使用 <code className="bg-blue-800 px-2 py-1 rounded">https://apipro.maynor1024.live/v1</code> 中转服务，
-              API 密钥可自定义（无需真实 Grok API Key）
+              <span className="font-semibold">💡 纯前端应用：</span>
+              数据存储在浏览器 localStorage，API 密钥可自定义。
+              推荐使用 <code className="bg-blue-800 px-2 py-1 rounded">https://apipro.maynor1024.live/v1</code> 中转服务
             </p>
           </div>
         </div>
@@ -229,7 +185,7 @@ export default function Home() {
                     <div
                       key={template.id}
                       className="bg-gray-700 p-4 rounded-lg border border-gray-600 hover:border-blue-500 transition-colors cursor-pointer"
-                      onClick={() => createTaskFromTemplate(template)}
+                      onClick={() => handleCreateTaskFromTemplate(template)}
                     >
                       <h4 className="font-semibold mb-2">{template.name}</h4>
                       <p className="text-sm text-gray-400 mb-3">{template.description}</p>
@@ -272,7 +228,7 @@ export default function Home() {
                     </div>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => toggleTaskStatus(task)}
+                        onClick={() => handleToggleTaskStatus(task)}
                         className="p-2 hover:bg-gray-600 rounded-lg transition-colors"
                         title={task.status === 'active' ? '暂停' : '启动'}
                       >
@@ -283,7 +239,7 @@ export default function Home() {
                         )}
                       </button>
                       <button
-                        onClick={() => executeTask(task.id)}
+                        onClick={() => handleExecuteTask(task.id)}
                         disabled={executingTask === task.id}
                         className="p-2 hover:bg-blue-600 rounded-lg transition-colors disabled:opacity-50"
                         title="立即执行"
@@ -302,7 +258,7 @@ export default function Home() {
                         <History className="w-5 h-5" />
                       </button>
                       <button
-                        onClick={() => deleteTask(task.id)}
+                        onClick={() => handleDeleteTask(task.id)}
                         className="p-2 hover:bg-red-600 rounded-lg transition-colors"
                         title="删除"
                       >
@@ -331,6 +287,71 @@ export default function Home() {
             </div>
           )}
         </div>
+
+        {/* API Settings Modal */}
+        {showSettings && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-gray-800 rounded-xl max-w-2xl w-full border border-gray-700">
+              <div className="flex items-center justify-between p-6 border-b border-gray-700">
+                <h3 className="text-xl font-bold">API 配置</h3>
+                <button
+                  onClick={() => setShowSettings(false)}
+                  className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="p-6 space-y-4">
+                <div className="bg-blue-900 bg-opacity-20 border border-blue-500 rounded-lg p-4">
+                  <p className="text-blue-300 text-sm">
+                    <span className="font-semibold">💡 提示：</span>
+                    API 密钥可以填写任意字符串（如：sk-my-key-123），推荐使用中转 API 地址
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">API 密钥</label>
+                  <input
+                    type="text"
+                    value={apiConfig.apiKey}
+                    onChange={(e) => setApiConfig({ ...apiConfig, apiKey: e.target.value })}
+                    placeholder="输入任意字符串作为 API 密钥"
+                    className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">API 地址</label>
+                  <input
+                    type="text"
+                    value={apiConfig.apiBase}
+                    onChange={(e) => setApiConfig({ ...apiConfig, apiBase: e.target.value })}
+                    placeholder="https://apipro.maynor1024.live/v1"
+                    className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">模型名称</label>
+                  <input
+                    type="text"
+                    value={apiConfig.model}
+                    onChange={(e) => setApiConfig({ ...apiConfig, model: e.target.value })}
+                    placeholder="grok-4.1-fast"
+                    className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <button
+                  onClick={handleSaveApiConfig}
+                  className="w-full bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-medium transition-colors"
+                >
+                  保存配置
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Execution Result Modal */}
         {showExecutionModal && executionResult && (

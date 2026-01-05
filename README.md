@@ -1,202 +1,305 @@
-## 马斯克都爱用的Grok定时任务，治好了我的信息焦虑
+# Grok Tasks Manager - 纯前端版本
 
-原创 AI沃茨 [卡尔的AI沃茨](javascript:void(0);) *2026年1月5日 22:57* *浙江*
+一个基于 Next.js 构建的 Grok 自动化任务管理平台，纯前端实现，可部署到 GitHub Pages。
 
+## ⚠️ 重要说明：纯前端 + 中转 API
 
+本项目是**纯前端应用**，无需后端服务器：
 
-信息焦虑晚期的我又来折腾信息流了！
+- 💾 **数据存储**：使用浏览器 localStorage，数据保存在本地
+- 🌐 **中转 API**：推荐使用 `https://apipro.maynor1024.live/v1`
+- 🔑 **自定义密钥**：API 密钥可填写任意字符串
+- ✅ **无需服务器**：可部署到 GitHub Pages、Vercel、Netlify 等
+- 🚀 **开箱即用**：打开网页即可使用，无需后端配置
 
-过去一年我基本属于上一个坑刚填上，又给自己挖一新坑。折腾过AI浏览器，RSS+AI去重，Deep Research，Claude Code Skills，AI投毒等，
+> **配置方式**：首次使用点击右上角「API 设置」按钮，填写任意 API 密钥和中转地址即可
 
-结论很简单，方法越复杂自动化程度越高越累。最近我又发现一个新方法，轻量到离谱，不需要任何编程知识。
+## 功能特性
 
-**定时从X上一批大佬账号过去24小时更新的帖子里定点筛选出高赞高互动，同样的思路还可以获取全网Nano Banana Pro的百赞提示语帖子，还可以在Manus和元宝上定时用，相当完美的解法。**
+- ✅ **任务管理**：创建、编辑、删除和执行 Grok 任务
+- ✅ **预设模板库**：5 个开箱即用的任务模板
+  - X 热帖监控
+  - AI 技术追踪
+  - 竞品动态监控
+  - 行业大V追踪
+  - AI 提示词收集
+- ✅ **本地存储**：数据保存在浏览器 localStorage
+- ✅ **纯前端**：无需后端服务器
+- ✅ **一键部署到 GitHub Pages**
+- ✅ **现代化 UI**：使用 Tailwind CSS 和 Lucide Icons
 
+## 技术栈
 
+- **框架**: Next.js 14 + TypeScript (Static Export)
+- **样式**: Tailwind CSS
+- **部署**: GitHub Pages / Vercel / Netlify
+- **存储**: localStorage（浏览器本地存储）
+- **API**: Grok API (通过中转服务)
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/YEhakvKZjXn2xsEl1c2lg1Ov0Mh7JxGN0OT3dKyCoLvz2Bcw37CToRKibiaQSicBnUtrAl1Q0ibsJtCZpVkydUDMdg/640?wx_fmt=png&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1#imgIndex=0)
+## 快速开始
 
-怎么发现的呢？
+### 1. 克隆项目
 
-每次新产品出来，我都要先收集几十个case，除了用OpenAI Deep Research基本上就是Grok。
+\`\`\`bash
+git clone https://github.com/xianyu110/grok-task.git
+cd grok-task
+\`\`\`
 
-毕竟给马斯克充钱了，对话次数不用回来，总感觉亏了。我一开始也按常见思路去问，**“帮我收集 10 个 Nano Banana Pro 最火的帖子，带提示语的。”**
+### 2. 安装依赖
 
+\`\`\`bash
+npm install
+\`\`\`
 
+### 3. 本地开发
 
-![Image](https://mmbiz.qpic.cn/mmbiz_jpg/YEhakvKZjXn2xsEl1c2lg1Ov0Mh7JxGNoibTTPsmkQc1iaQg0cAxLFJQpAgfcxyfeatIm8ETjle7nW15HCwVXbBQ/640?wx_fmt=jpeg&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1#imgIndex=1)
+\`\`\`bash
+npm run dev
+\`\`\`
 
-抓回来的东西很真实，但点赞数一看就不对劲，明显不是最火的那批。内容也很散没有重点。你说它没用吧，它也有用。你说它够用吧，它就差点意思
+访问 http://localhost:3000
 
-后来我刷到**@****ttmouse - 豆爸****的**Grok用法，在提示语里明确指定时间范围，热度指标和输出格式，
+### 4. 构建静态文件
 
+\`\`\`bash
+npm run build
+\`\`\`
 
+构建后的静态文件在 \`out\` 目录
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/YEhakvKZjXn2xsEl1c2lg1Ov0Mh7JxGN0A99D443I58YN1C5aeZaSp3bYqQfDqerfVVqo45bkxuGSIEK6gOrQg/640?wx_fmt=png&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1#imgIndex=2)
+## 部署到 GitHub Pages
 
-读起来像是请一助理先把市场摸了一遍，等我起床后就收到一份小抄了。
+### 方式一：手动部署
 
-⚽
+1. **构建项目**
 
-你现在是“Nano Banana Pro 每日热帖监控机器人”。  
+\`\`\`bash
+npm run build
+\`\`\`
 
-每次用户说“执行 Nano Banana Pro 每日热帖监控”或直接给你这个提示词时，
+2. **推送 out 目录到 gh-pages 分支**
 
-请严格按照以下步骤和格式输出：
+\`\`\`bash
+# 安装 gh-pages 工具
+npm install -g gh-pages
 
-1. 1.搜索最近 24 小时（从现在往前推 24h）内 X（Twitter）平台所有包含“Nano Banana Pro”或“Gemini Nano Banana”等关键词的帖子。  
-2. 2.筛选条件：  
+# 部署到 GitHub Pages
+gh-pages -d out
+\`\`\`
 
-  \- 点赞数 ≥ 30（优先高赞）
+3. **配置 GitHub Pages**
+   - 进入 GitHub 仓库 Settings > Pages
+   - Source 选择 \`gh-pages\` 分支
+   - 保存后等待部署完成
 
-  \- 浏览量尽量 ≥ 1 万（如果当天整体数据低，可适当放宽但要标注）
+### 方式二：GitHub Actions 自动部署（推荐）
 
-  \- 必须是原创帖或明显与 Nano Banana Pro 提示词/技巧/作品相关的帖子
+1. **创建 GitHub Actions 配置**
 
-1. 3.按点赞数从高到低排序，取真实的前 20 条（如果不足 20 条，就给出全部并说明“今日仅找到 X 条高互动内容”）。  
-2. 4.输出格式严格如下：
+创建文件 \`.github/workflows/deploy.yml\`：
 
-【Nano Banana Pro 24小时热帖速报】  
-统计时间：XXXX年XX月XX日 XX:XX（UTC+8）前24小时  
-今日最高赞：XXXX 赞｜今日最高浏览：XX万+  
-（这里加一句你自己的简短观察，例如“今天建筑/自拍/视频提示最火爆”或“官方放出新功能，社区炸了”等，控制在20字以内）
+\`\`\`yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
-@用户名  一句话描述（20-30字，突出提示词技巧、风格、用途）  
-点赞 XXXX，浏览 X万+  
-https://x.com/用户名/status/帖子的ID
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-（依次列出 Top 20，用空行分隔，每一个帖子用代码块包裹，方便复制）
+      - name: Install dependencies
+        run: npm ci
 
-\5. 所有链接必须是真实的 http://x.com 链接，ID 正确。  
-\6. 如果当天确实没什么高互动内容，老实写“今日24小时内暂无突破1万浏览的高互动 Nano Banana Pro 帖子，社区比较平静”。  
-\7. 不要编造数据、用户名、链接，一切基于真实搜索结果。
+      - name: Build
+        run: npm run build
 
-这个提示语可以被拆解成不同的形态，换成vibe coding的，veo3.1的都可以。
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: \${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+\`\`\`
 
-如果不想手动改，让Grok原汤化原食也是可以的。
+2. **推送到 GitHub**
 
-先让Grok搜索技术名词，把中日英的常见写法都列出来，再用最近一周高赞的现象去反推社区在讨论什么，再提炼成监控关键词。这样得到的提示语会更贴着社区真实用法走，不会跑偏。
+\`\`\`bash
+git add .
+git commit -m "feat: add GitHub Actions deployment"
+git push origin main
+\`\`\`
 
+3. **配置 GitHub Pages**
+   - 进入仓库 Settings > Pages
+   - Source 选择 \`gh-pages\` 分支
+   - 保存后自动部署
 
+4. **访问网站**
 
-筛选条件这一趴是最重要的，删掉就会退化成我一开始用的提示语，有明确限定才能让Grok像SQL做精准筛选。
+   https://xianyu110.github.io/grok-task/
 
+## 使用说明
 
+### 首次配置
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/YEhakvKZjXn2xsEl1c2lg1Ov0Mh7JxGNNXXiaLZlaclpfuHgiaIOSuicpTbocmES4lEx5ibcMuwW8CONEVCbGaibmIQ/640?wx_fmt=png&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1#imgIndex=3)
+1. 打开网站后，点击右上角的「**API 设置**」按钮
+2. 填写配置：
+   - **API 密钥**：任意字符串（如：\`sk-my-key-123456\`）
+   - **API 地址**：\`https://apipro.maynor1024.live/v1\`
+   - **模型名称**：\`grok-4.1-fast\`
+3. 点击「保存配置」
 
-Grok的优势很直接，实时性强，很多时候比我手动刷更快更稳。但很多人会卡在新号关注大号的冷启动上，用一两个月都没看到什么有用的信息。
+### 创建任务
 
-用这种方式搜一段时间，会顺便收罗出一批高质量创作者，相当于一箭三四五六七雕了。
+1. 点击「从模板创建任务」按钮
+2. 选择一个预设模板
+3. 任务将自动创建并显示在任务列表中
 
-不过到这里还只是加深单个主题的信息获取深度和去重能力。问题是我们一天会接触很多主题，AI一会儿发新模型，一会儿出新名词，一会儿又冒出一个新玩法。如果每个主题都手动触发一次，信息焦虑很快就会变成触发焦虑，刷完又刷，问完又问。
+### 执行任务
 
-所以我盯上了Grok的Task，也就是定时任务。
+- **手动执行**：点击任务卡片上的「播放」按钮
+- 任务会调用 Grok API 并显示结果
+- 执行历史会保存在浏览器 localStorage
 
-**想象一下，你把上面提示语换个形态，把信息输入维度从关键词切换成一组大佬账号，再把它塞进 Tasks，设定每天早晚各跑一次。Grok 就会按时跑完，把结果推给你。推送形式可以是浏览器通知，也可以是邮件，你还可以在结果上继续追问。**
+### 管理任务
 
-先把所有想获取内容的X账号都加到一个list里面，也可以先用我这个 
+- **暂停/启动**：点击「暂停」按钮
+- **删除**：点击「垃圾桶」图标
+- **查看历史**：点击「历史」按钮
+- **查看状态**：任务状态实时显示
 
-x.com/i/lists/1695376776867062037
+## 项目结构
 
+\`\`\`
+grok-task/
+├── app/
+│   ├── layout.tsx         # 根布局
+│   ├── page.tsx           # 主页面（纯客户端）
+│   └── globals.css        # 全局样式
+├── lib/
+│   ├── clientGrokClient.ts    # 浏览器端 Grok API 客户端
+│   ├── clientStorage.ts       # localStorage 存储管理
+│   └── templates.ts           # 预设模板
+├── .github/
+│   └── workflows/
+│       └── deploy.yml         # GitHub Actions 自动部署
+├── next.config.js             # Next.js 配置（静态导出）
+├── tailwind.config.ts         # Tailwind 配置
+└── package.json
+\`\`\`
 
+## 其他部署方式
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/YEhakvKZjXn2xsEl1c2lg1Ov0Mh7JxGNxgvH7Buw1iaX7t4Vic6GX8yYeUYeYKF22K4AQyNCD8wpybV7AXWq7qkQ/640?wx_fmt=png&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1#imgIndex=4)
+### Vercel
 
-然后在🔗grok.com/tasks上新建一个定时任务。
+1. 导入 GitHub 仓库到 Vercel
+2. 自动检测为 Next.js 项目
+3. 点击 Deploy
 
+### Netlify
 
+1. 在 Netlify 导入 GitHub 仓库
+2. Build command: \`npm run build\`
+3. Publish directory: \`out\`
+4. 点击 Deploy
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/YEhakvKZjXn2xsEl1c2lg1Ov0Mh7JxGNG7nWyJCcDxhGBpIZuAS6bGLpDo8ibibxzqp5NyXd6WB9soBHJCjCK85A/640?wx_fmt=png&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1#imgIndex=5)
+### 本地预览
 
-提示语是基于**@****ttmouse - 豆爸**的基础上修改的
+\`\`\`bash
+# 构建
+npm run build
 
-[角色]
+# 使用 serve 预览（需要安装 serve）
+npx serve out
+\`\`\`
 
-List账号每日热点内容筛选机器人
+## 常见问题
 
-[任务目标]
+**Q: 数据会丢失吗？**
+A: 数据保存在浏览器 localStorage，清除浏览器数据会丢失。建议定期导出重要任务的提示词。
 
-1. 1.搜索最近 24 小时（从现在往前推 24h）内 X（Twitter）平台List指定用户ID 的帖子。 
-2. 2.筛选条件：  
-3. 3.按点赞数从高到低排序，取真实的前 20 条（如果不足 20 条，就给出全部并说明“今日仅找到 X 条高互动内容”）。  
+**Q: 为什么需要配置 API？**
+A: 本项目是纯前端应用，需要在浏览器中直接调用 Grok API。推荐使用中转服务，API 密钥可自定义。
 
-输出格式严格如下：
+**Q: 可以使用官方 Grok API 吗？**
+A: 可以，但需要真实的 API Key。推荐使用中转服务更方便。
 
-1. 4.统计x.com/i/lists/1695376776867062037的账号
+**Q: 支持定时任务吗？**
+A: 当前版本不支持自动定时执行（因为是纯前端）。需要手动点击执行按钮。
 
-【AI INFO 24小时热帖速报】  
+**Q: 如何添加更多模板？**
+A: 编辑 \`lib/templates.ts\` 文件，添加新的模板配置。
 
-统计时间：XXXX年XX月XX日 XX:XX（UTC+8）前24小时  
+**Q: 跨设备同步吗？**
+A: 不支持。数据存储在当前浏览器的 localStorage，不会跨设备同步。
 
-今日最高赞：XXXX 赞｜今日最高浏览：XX万+  
+## 技术原理
 
-（这里加一句你自己的简短观察，例如“今天建筑/自拍/视频提示最火爆”或“官方放出新功能，社区炸了”等，控制在20字以内）
+### 为什么可以部署到 GitHub Pages？
 
-@用户名  一句话描述（20-30字，突出提示词技巧、风格、用途）  
+1. **静态导出**：使用 Next.js 的 \`output: 'export'\` 配置
+2. **无后端依赖**：所有 API 调用在浏览器端完成
+3. **localStorage**：数据存储在用户浏览器本地
+4. **CORS 友好**：中转 API 支持跨域请求
 
-点赞 XXXX，浏览 X万+  
+### 数据存储方案
 
-https://x.com/用户名/status/帖子的ID
+```typescript
+// 任务存储在 localStorage
+localStorage.setItem('grok_tasks', JSON.stringify(tasks));
 
-（依次列出 Top 20，用空行分隔）
+// API 配置存储在 localStorage
+localStorage.setItem('grok_api_config', JSON.stringify(config));
 
-1. 5.所有链接必须是真实 http://x.com 链接，ID 正确。  
-2. 6.如果当天确实没什么高互动内容，老实写“今日24小时内暂无突破1万浏览的高互动帖子，社区比较平静”。  
-3. 7.不要编造数据、用户名、链接，一切必须基于真实搜索结果。
+// 执行历史存储在 localStorage
+localStorage.setItem('grok_executions', JSON.stringify(executions));
+```
 
-以前我刷信息的时候会反复去确认有没有新东西，确认有没有漏掉，确认是不是又出了爆点。
+## 升级建议
 
-有了task之后，我试着把手机里大部分通知都关了，去相信早上那一次总结和晚上那一次总结。
+### 云端存储
 
-开始还是会不安，觉得会漏掉很多信息，但实际上并没有。中间确实可能会漏掉几个点，可换来的好处是我有了更长一段消化和创作的时间。这个时间不是碎片化的刷屏，是可以连续思考的时间。
+如果需要跨设备同步，可以集成：
+- Firebase Realtime Database
+- Supabase
+- Cloudflare KV
 
-接下来我就要来个大的了，
+### PWA 支持
 
-元宝和Manus也能定时任务！
+添加 Service Worker，支持离线使用：
+```bash
+npm install next-pwa
+```
 
-元宝还不限数量，但有点小问题，信源不一定会只从公众号和视频号里拿，所以时间刻度会有点慢。
+### 数据导入导出
 
+添加导出 JSON 功能，方便备份和迁移。
 
+## License
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/YEhakvKZjXn2xsEl1c2lg1Ov0Mh7JxGNic70GicRVFDHCngWN2xqG3AHetjzic1PibO2EY0YjOhYohYN0e3yVic61zg/640?wx_fmt=png&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1#imgIndex=6)
+MIT
 
-再往外推一步，就轮到Manus这种更像自动化系统，或者说简易的多Agent上场了。
+## 支持
 
+- **GitHub**: https://github.com/xianyu110/grok-task
+- **问题反馈**: 提交 Issue
+- **贡献代码**: 提交 Pull Request
 
+---
 
-![Image](https://mmbiz.qpic.cn/mmbiz_png/YEhakvKZjXn2xsEl1c2lg1Ov0Mh7JxGNeG8kUCekU2WBSRmVToMmPNtaCw1vMNNUO88ZBOiaXdMicN6A0Bo7BNkQ/640?wx_fmt=png&from=appmsg&tp=wxpic&wxfrom=5&wx_lazy=1#imgIndex=7)
+## 致谢
 
-Manus有定时功能就相当于其他的Agent都有了，比方说可以在Manus里登陆Genspark就可以每天定时抓电影资源了。
+感谢 [@卡尔的AI沃茨](https://github.com/kaier) 的创意和灵感！
 
-这个就给自己再挖一个坑，下一篇再结合Manus最新的一些好玩的更新一起说。
-
-现在回看一下我这波折腾，
-
-信息焦虑的根源并不是我错过了多少信息，
-
-而是我不知道错过了什么。
-
-不确定那条没看到的更新是不是关键，
-
-不确定那条没刷到的热帖是不是爆点，
-
-所以我不停刷新。
-
-定时化信息流的价值，
-
-就是把这份不确定性折叠掉一部分，
-
-让我知道今天的变化大概长什么样。
-
-以前我把链接丢收藏夹，丢备忘录，丢各种todo list，最后会崩塌成信息坟场。
-
-现在我更愿意让定时日报成为笔记本身，
-
-它带着时间戳，像是每天切下来的薄片。
-
-哪天想写Nano Banana Pro了，
-
-就翻翻最近七天日报，
-
-选题和案例就已经在这了。
+本项目基于文章《马斯克都爱用的Grok定时任务，治好了我的信息焦虑》的思路实现。
