@@ -2,6 +2,11 @@
 
 一个基于 Next.js 构建的 Grok 自动化任务管理平台，纯前端实现，可部署到 GitHub Pages。
 
+[![Deploy to GitHub Pages](https://github.com/xianyu110/grok-task/actions/workflows/deploy.yml/badge.svg)](https://github.com/xianyu110/grok-task/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+**在线演示**: [https://xianyu110.github.io/grok-task/](https://xianyu110.github.io/grok-task/)
+
 ## ⚠️ 重要说明：纯前端 + 中转 API
 
 本项目是**纯前端应用**，无需后端服务器：
@@ -14,7 +19,7 @@
 
 > **配置方式**：首次使用点击右上角「API 设置」按钮，填写任意 API 密钥和中转地址即可
 
-## 功能特性
+## ✨ 功能特性
 
 - ✅ **任务管理**：创建、编辑、删除和执行 Grok 任务
 - ✅ **预设模板库**：5 个开箱即用的任务模板
@@ -23,18 +28,22 @@
   - 竞品动态监控
   - 行业大V追踪
   - AI 提示词收集
+- ✅ **优雅的交互体验**：Toast 通知、实时状态更新、响应式设计
+- ✅ **智能错误处理**：30秒超时控制、友好的错误提示、网络异常处理
 - ✅ **本地存储**：数据保存在浏览器 localStorage
 - ✅ **纯前端**：无需后端服务器
 - ✅ **一键部署到 GitHub Pages**
 - ✅ **现代化 UI**：使用 Tailwind CSS 和 Lucide Icons
+- ✅ **性能优化**：React Hooks 优化、组件懒加载
 
-## 技术栈
+## 🛠 技术栈
 
 - **框架**: Next.js 14 + TypeScript (Static Export)
 - **样式**: Tailwind CSS
 - **部署**: GitHub Pages / Vercel / Netlify
 - **存储**: localStorage（浏览器本地存储）
 - **API**: Grok API (通过中转服务)
+- **性能**: React useCallback/useMemo 优化
 
 ## 快速开始
 
@@ -57,7 +66,9 @@ npm install
 npm run dev
 \`\`\`
 
-访问 http://localhost:3000
+访问 http://localhost:3000/grok-task
+
+> **注意**：由于配置了 `basePath`，本地开发需要访问 `/grok-task` 路径
 
 ### 4. 构建静态文件
 
@@ -92,62 +103,27 @@ gh-pages -d out
    - Source 选择 \`gh-pages\` 分支
    - 保存后等待部署完成
 
-### 方式二：GitHub Actions 自动部署（推荐）
+### 方式二：GitHub Actions 自动部署（推荐）✨
 
-1. **创建 GitHub Actions 配置**
+本项目已配置 GitHub Actions 自动部署，只需：
 
-创建文件 \`.github/workflows/deploy.yml\`：
+1. **确保仓库已配置 GitHub Pages**
+   - 进入 GitHub 仓库 Settings > Pages
+   - Source 选择 `GitHub Actions`
 
-\`\`\`yaml
-name: Deploy to GitHub Pages
+2. **推送代码到 main 分支**
+   \`\`\`bash
+   git add .
+   git commit -m "your commit message"
+   git push origin main
+   \`\`\`
 
-on:
-  push:
-    branches:
-      - main
+3. **自动部署**
+   - GitHub Actions 会自动构建并部署
+   - 约 1-2 分钟后即可访问：https://xianyu110.github.io/grok-task/
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: \${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
-\`\`\`
-
-2. **推送到 GitHub**
-
-\`\`\`bash
-git add .
-git commit -m "feat: add GitHub Actions deployment"
-git push origin main
-\`\`\`
-
-3. **配置 GitHub Pages**
-   - 进入仓库 Settings > Pages
-   - Source 选择 \`gh-pages\` 分支
-   - 保存后自动部署
-
-4. **访问网站**
-
-   https://xianyu110.github.io/grok-task/
+4. **查看部署状态**
+   - 访问 Actions 页面：https://github.com/xianyu110/grok-task/actions
 
 ## 使用说明
 
@@ -224,13 +200,13 @@ npm run build
 npx serve out
 \`\`\`
 
-## 常见问题
+## ❓ 常见问题
 
 **Q: 数据会丢失吗？**
 A: 数据保存在浏览器 localStorage，清除浏览器数据会丢失。建议定期导出重要任务的提示词。
 
 **Q: 为什么需要配置 API？**
-A: 本项目是纯前端应用，需要在浏览器中直接调用 Grok API。推荐使用中转服务，API 密钥可自定义。
+A: 本项目是纯前端应用，需要在浏览器中直接调用 Grok API。推荐使用中转服务，API 密��可自定义。
 
 **Q: 可以使用官方 Grok API 吗？**
 A: 可以，但需要真实的 API Key。推荐使用中转服务更方便。
@@ -243,6 +219,12 @@ A: 编辑 \`lib/templates.ts\` 文件，添加新的模板配置。
 
 **Q: 跨设备同步吗？**
 A: 不支持。数据存储在当前浏览器的 localStorage，不会跨设备同步。
+
+**Q: 本地开发访问 404？**
+A: 由于配置了 `basePath: '/grok-task'`，本地开发需要访问 `http://localhost:3000/grok-task`
+
+**Q: GitHub Pages 部署后样式丢失？**
+A: 确保 `public/.nojekyll` 文件存在，并等待 GitHub Pages 完全部署（可能需要几分钟）
 
 ## 技术原理
 
@@ -266,7 +248,16 @@ localStorage.setItem('grok_api_config', JSON.stringify(config));
 localStorage.setItem('grok_executions', JSON.stringify(executions));
 ```
 
-## 升级建议
+## 🚀 最近更新
+
+### v1.1.0 (2025-01-12)
+- ✨ 优化用户体验：用 Toast 通知替代 alert 弹窗
+- ⚡ 性能优化：使用 React useCallback/useMemo 减少重新渲染
+- 🛡️ 增强错误处理：添加 30 秒超时控制和友好错误提示
+- ✅ 代码质量：改进类型安全和错误边界处理
+- 📱 改进响应式设计和交互体验
+
+## 🎯 升级建议
 
 ### 云端存储
 
@@ -285,6 +276,10 @@ npm install next-pwa
 ### 数据导入导出
 
 添加导出 JSON 功能，方便备份和迁移。
+
+### 定时任务
+
+可以集成浏览器 Notification API 或 Service Worker 实现定时提醒。
 
 ## License
 
