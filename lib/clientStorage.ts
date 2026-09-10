@@ -44,7 +44,7 @@ export const getApiConfig = (): ApiConfig => {
   // 默认配置
   return {
     apiKey: '',
-    apiBase: 'https://apipro.maynor1024.live/v1',
+    apiBase: 'https://tryallapi.com/v1',
     model: 'grok-4.1-fast',
   };
 };

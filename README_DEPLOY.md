@@ -6,12 +6,12 @@
 
 本项目使用**中转 API 服务**，无需真实的 Grok API Key：
 
-- 🌐 **中转 API 地址**：`https://apipro.maynor1024.live/v1`
+- 🌐 **中转 API 地址**：`https://tryallapi.com/v1`
 - 🔑 **API 密钥**：可自定义任意字符串（无需官方 API Key）
 - ✅ **无需 X Premium 订阅**
 - 🚀 **开箱即用，配置简单**
 
-> **配置示例**：只需在环境变量中设置 `GROK_API_BASE=https://apipro.maynor1024.live/v1`，API Key 可以填任意字符串
+> **配置示例**：只需在环境变量中设置 `GROK_API_BASE=https://tryallapi.com/v1`，API Key 可以填任意字符串
 
 ## 功能特性
 
@@ -52,7 +52,7 @@ npm install
 GROK_API_KEY=your-custom-api-key
 
 # 🌐 中转 API 地址（必须使用此地址）
-GROK_API_BASE=https://apipro.maynor1024.live/v1
+GROK_API_BASE=https://tryallapi.com/v1
 
 # 🤖 模型名称
 GROK_MODEL=grok-4.1-fast
@@ -60,7 +60,7 @@ GROK_MODEL=grok-4.1-fast
 
 **配置说明：**
 - \`GROK_API_KEY\`: 密钥可自定义，填写任意字符串即可（例如：\`sk-my-custom-key-123456\`）
-- \`GROK_API_BASE\`: 必须使用中转 API 地址 \`https://apipro.maynor1024.live/v1\`
+- \`GROK_API_BASE\`: 必须使用中转 API 地址 \`https://tryallapi.com/v1\`
 - \`GROK_MODEL\`: 推荐使用 \`grok-4.1-fast\`，速度快且效果好
 
 ### 3. 本地开发
@@ -92,7 +92,7 @@ vercel
 2. 在 [Vercel Dashboard](https://vercel.com) 导入项目
 3. 配置环境变量（重要！）：
    - \`GROK_API_KEY\`: 自定义任意字符串（如：\`sk-my-key-123\`）
-   - \`GROK_API_BASE\`: **必须填写** \`https://apipro.maynor1024.live/v1\`
+   - \`GROK_API_BASE\`: **必须填写** \`https://tryallapi.com/v1\`
    - \`GROK_MODEL\`: \`grok-4.1-fast\`
 4. 点击 Deploy
 

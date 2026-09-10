@@ -2,7 +2,7 @@ grok-4.1-fast
 
 sk-0bJSrMXaPm4Uvvs9RzjDWYh3eO81UkNpYELtfTMPJGRTxl6C
 
-https://apipro.maynor1024.live/
+https://tryallapi.com/
 
 
 API端点

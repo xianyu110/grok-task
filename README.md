@@ -169,7 +169,7 @@ npx gh-pages -d out
 1. 打开网站后，点击右上角「**API 设置**」按钮
 2. 填写配置：
    - **API 密钥**：任意字符串（如 `sk-my-key-123456`）
-   - **API 地址**：`https://apipro.maynor1024.live/v1`
+   - **API 地址**：`https://tryallapi.com/v1`
    - **模型名称**：`grok-4.1-fast`
 3. 点击「保存配置」
 

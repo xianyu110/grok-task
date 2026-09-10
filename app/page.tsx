@@ -192,7 +192,7 @@ export default function Home() {
                 数据存储在浏览器 localStorage，API 密钥可自定义。
               </p>
               <p>
-                推荐使用 <code className="bg-gray-900 px-2 py-1 rounded text-blue-400">https://apipro.maynor1024.live/v1</code> 中转服务
+                推荐使用 <code className="bg-gray-900 px-2 py-1 rounded text-blue-400">https://tryallapi.com/v1</code> 中转服务
               </p>
             </div>
           </details>
@@ -374,7 +374,7 @@ export default function Home() {
                     type="text"
                     value={apiConfig.apiBase}
                     onChange={(e) => setApiConfig({ ...apiConfig, apiBase: e.target.value })}
-                    placeholder="https://apipro.maynor1024.live/v1"
+                    placeholder="https://tryallapi.com/v1"
                     className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
                   />
                 </div>
